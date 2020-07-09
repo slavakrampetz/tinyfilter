@@ -1,8 +1,6 @@
 package server
 
 import (
-	"net/http"
-
 	// "path/filepath"
 	// "pkg/mod/github.com/jordan-wright/unindexed@v0.0.0-20181209214434-78fa79113c0f"
 	// "time"
@@ -39,25 +37,26 @@ func CreateEcho() *echo.Echo {
 // Ping
 // noinspection GoUnusedParameter
 func ping(c echo.Context) error {
-	return c.String(200,"pong")
+	return c.String(200, "pong")
 }
 
 // Home, not a thing
 func home(c echo.Context) error {
-	return c.String(401,"You are not welcome here")
+	return c.String(401, "You are not welcome here")
 }
 
 // Init router
-func initEcho() *echo.Echo  {
+func initEcho() *echo.Echo {
 
 	e := echo.New()
+	e.HideBanner = true
 
 	// Logging
 	e.Use(mw.Logger())
 	e.Use(mw.LoggerWithConfig(mw.LoggerConfig{
-	// 	Format: middleware.DefaultLoggerConfig.Format,
-	// 	CustomTimeFormat: "2006-01-02 15:04:05.00",
-	// 	Output: os.Stdout,
+		// 	Format: middleware.DefaultLoggerConfig.Format,
+		// 	CustomTimeFormat: "2006-01-02 15:04:05.00",
+		// 	Output: os.Stdout,
 	}))
 
 	// Request ID
@@ -69,7 +68,6 @@ func initEcho() *echo.Echo  {
 	// Recover of panic errors
 	e.Use(mw.Recover())
 
-
 	// Not implemented?
 	// handler.Use(middleware.RealIP)
 	// handler.Use(middleware.Compress(???))
@@ -77,7 +75,6 @@ func initEcho() *echo.Echo  {
 
 	return e
 }
-
 
 func requestId() string {
 	return rand.String(1)

@@ -13,7 +13,7 @@ import (
 )
 
 const Port = 8085
-const TimeoutShutdown = 10*time.Second
+const TimeoutShutdown = 10 * time.Second
 
 func main() {
 
@@ -31,9 +31,12 @@ func main() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
+
+	// Shutdown context
 	ctx, cancel := context.WithTimeout(context.Background(), TimeoutShutdown)
 	defer cancel()
 
+	// Try shutdown right now
 	if err := echo.Shutdown(ctx); err != nil {
 		echo.Logger.Fatal(err)
 	}

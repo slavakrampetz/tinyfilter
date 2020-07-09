@@ -7,3 +7,6 @@
 
 ## Go modules
 /vendor/
+
+## Build
+/bin/
