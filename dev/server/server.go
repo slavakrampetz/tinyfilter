@@ -9,7 +9,12 @@ import (
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
 	rand "github.com/labstack/gommon/random"
+	"os"
 )
+
+const LogFormatCombined = `${time_rfc3339} ${id} ${remote_ip} ` +
+	`${method} "${uri}"  ${status}:${error} ${latency} ${latency_human}` +
+	` ${bytes_in}/${bytes_out}  ${user_agent}`
 
 // Interface
 func CreateEcho() *echo.Echo {
@@ -52,11 +57,10 @@ func initEcho() *echo.Echo {
 	e.HideBanner = true
 
 	// Logging
-	e.Use(mw.Logger())
 	e.Use(mw.LoggerWithConfig(mw.LoggerConfig{
-		// 	Format: middleware.DefaultLoggerConfig.Format,
-		// 	CustomTimeFormat: "2006-01-02 15:04:05.00",
-		// 	Output: os.Stdout,
+		Format:           LogFormatCombined + "\n",
+		CustomTimeFormat: "2006-01-02 15:04:05.00",
+		Output: os.Stdout,
 	}))
 
 	// Request ID
@@ -69,13 +73,15 @@ func initEcho() *echo.Echo {
 	e.Use(mw.Recover())
 
 	// Not implemented?
-	// handler.Use(middleware.RealIP)
-	// handler.Use(middleware.Compress(???))
-	// handler.Use(middleware.Timeout(60 * time.Second))
-
+	// handler.Use(mw.RealIP)
+	// handler.Use(mw.Compress(???))
+	// handler.Use(mw.Timeout(60 * time.Second))
 	return e
 }
 
+//
+// Helpers
+
 func requestId() string {
-	return rand.String(1)
+	return rand.String(12)
 }

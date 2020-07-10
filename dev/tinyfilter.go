@@ -1,43 +1,28 @@
 package main
 
 import (
-	"context"
-
+	"fmt"
 	"os"
-	"os/signal"
-
-	"strconv"
-	"time"
-
-	"tinyfilter/dev/server"
+	A "tinyfilter/dev/app"
+	"tinyfilter/dev/etc"
 )
 
-const Port = 8085
-const TimeoutShutdown = 10 * time.Second
 
 func main() {
 
-	echo := server.CreateEcho()
+	app := &A.Application{
+		Port: etc.DefaultPort,
+	}
 
-	// Start
-	go func() {
-		if err := echo.Start(":" + strconv.Itoa(Port)); err != nil {
-			echo.Logger.Info("shutting down...")
-		}
-	}()
+	quit, err := app.Start()
+	if err != nil {
+		fmt.Println("Error starting", err)
+		os.Exit(2)
+	}
 
-	// Wait for interrupt signal to gracefully shutdown
-	// the server with a timeout of 10 seconds.
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
+	// Wait for interrupt signal to gracefully shutdown the server
 	<-quit
 
-	// Shutdown context
-	ctx, cancel := context.WithTimeout(context.Background(), TimeoutShutdown)
-	defer cancel()
-
-	// Try shutdown right now
-	if err := echo.Shutdown(ctx); err != nil {
-		echo.Logger.Fatal(err)
-	}
+	// Shutdown right now, with context timeout
+	app.Stop()
 }
