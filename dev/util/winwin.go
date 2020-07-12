@@ -1,4 +1,5 @@
-// package util
+package util
+
 //
 // import (
 // 	w "github.com/lxn/win"

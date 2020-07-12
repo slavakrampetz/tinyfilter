@@ -1,28 +1,81 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
-	A "tinyfilter/dev/app"
-	"tinyfilter/dev/etc"
+	"tinyfilter/dev/app"
+	"tinyfilter/dev/app/args"
+	"tinyfilter/dev/command/reload"
+	"tinyfilter/dev/command/youtube"
 )
 
+const (
+	version = "1.0.0"
+)
 
 func main() {
 
-	app := &A.Application{
-		Port: etc.DefaultPort,
+	banner()
+
+	cmd, err := args.Parse(os.Args[1:])
+	if err != nil {
+		fmt.Printf("Error parsing arguments> %s\n", err)
+		if cmd.Cmd == args.Help {
+			usage()
+		}
+		os.Exit(1)
 	}
 
-	quit, err := app.Start()
+	err = runCommand(cmd)
 	if err != nil {
-		fmt.Println("Error starting", err)
+		fmt.Printf("Error executing command: %s\n", cmd.Cmd)
 		os.Exit(2)
 	}
 
-	// Wait for interrupt signal to gracefully shutdown the server
-	<-quit
+	os.Exit(0)
+}
 
-	// Shutdown right now, with context timeout
-	app.Stop()
+func runCommand(cmd args.CmdArgs) error {
+
+	switch cmd.Cmd {
+
+	case args.Reload:
+		return reload.Exec()
+
+	case args.Youtube:
+		return youtube.Exec(cmd.Opt == args.OptsYtOn)
+
+	case args.Web:
+		return app.RunWeb()
+
+	case args.Help:
+		usage()
+		return nil
+	}
+
+	return errors.New("Command " + string(cmd.Cmd) + " not implemented yet")
+}
+
+func banner() {
+	text := "tinyfilter v." + version + ", app for manage tinyproxy configuration\n\n"
+	fmt.Print(text)
+}
+
+func usage() {
+	usage := `Usage: tinyfilter <command> [<options>]
+
+Commands:
+
+  help,h       Show this screen and exit
+
+  web          Start web-server for listen remote commands
+
+  reload,r     Reload tinyproxy
+
+  youtube,yt allow|deny
+               Allow or deny youtube links by proxy
+
+`
+	fmt.Print(usage)
 }

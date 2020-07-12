@@ -13,8 +13,30 @@ import (
 	"tinyfilter/dev/server"
 )
 
-// Application structure
-type Application struct {
+func RunWeb() error {
+
+	web := &WepApp{
+		Port: etc.DefaultPort,
+	}
+
+	quit, err := web.Start()
+	if err != nil {
+		fmt.Println("Error starting web-server> ", err)
+		return err
+	}
+
+	// Wait for interrupt signal to gracefully shutdown the server
+	if quit != nil {
+		<-quit
+	}
+
+	// Shutdown right now, with context timeout
+	web.Stop()
+	return nil
+}
+
+// WepApp structure
+type WepApp struct {
 
 	// Port for listen
 	Port int
@@ -26,31 +48,25 @@ type Application struct {
 }
 
 // Get address of server
-func (app *Application) GetAddress() string {
-	return ":" + strconv.Itoa(app.Port)
+func (web *WepApp) getAddress() string {
+	return ":" + strconv.Itoa(web.Port)
 }
 
-
-// Init HTTP server
-func (app *Application) Init() {
-	app.Server = server.CreateEcho()
-	app.Log = app.Server.Logger
-}
-
-func (app *Application) ReloadConfig() {
-	fmt.Println("reload config...")
+func (web *WepApp) ReloadConfig() {
+	fmt.Println("TODO: reload config...")
 }
 
 // Launch and listen to OS signals
-func (app *Application) Start() (chan bool, error) {
+func (web *WepApp) Start() (chan bool, error) {
 
-	app.Init()
+	web.Server = server.CreateEcho()
+	web.Log = web.Server.Logger
 
 	isOk := true
 	go func() {
-		if err := app.Server.Start(app.GetAddress()); err != nil {
+		if err := web.Server.Start(web.getAddress()); err != nil {
 			isOk = false
-			app.Log.Fatal("shutting down...")
+			web.Log.Fatal("shutting down...")
 		}
 	}()
 
@@ -62,7 +78,7 @@ func (app *Application) Start() (chan bool, error) {
 
 	// OS Signals
 	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGKILL)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
 
 	go func() {
 		for sig := range signals {
@@ -72,7 +88,7 @@ func (app *Application) Start() (chan bool, error) {
 				done <- true
 				return
 			case syscall.SIGHUP:
-				app.ReloadConfig()
+				web.ReloadConfig()
 			}
 		}
 	}()
@@ -81,14 +97,13 @@ func (app *Application) Start() (chan bool, error) {
 }
 
 // Stop
-func (app *Application) Stop() {
+func (web *WepApp) Stop() {
 
 	// Shutdown context
 	ctx, cancel := context.WithTimeout(context.Background(), etc.DefaultTimeoutShutdown)
 	defer cancel()
 
-	if err := app.Server.Shutdown(ctx); err != nil {
-		app.Log.Fatal(err)
+	if err := web.Server.Shutdown(ctx); err != nil {
+		web.Log.Fatal(err)
 	}
 }
-

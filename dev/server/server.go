@@ -50,7 +50,7 @@ func home(c echo.Context) error {
 	return c.String(401, "You are not welcome here")
 }
 
-// Init router
+// initWeb router
 func initEcho() *echo.Echo {
 
 	e := echo.New()
@@ -60,7 +60,7 @@ func initEcho() *echo.Echo {
 	e.Use(mw.LoggerWithConfig(mw.LoggerConfig{
 		Format:           LogFormatCombined + "\n",
 		CustomTimeFormat: "2006-01-02 15:04:05.00",
-		Output: os.Stdout,
+		Output:           os.Stdout,
 	}))
 
 	// Request ID
