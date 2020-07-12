@@ -19,16 +19,22 @@ type ConfigData struct {
 }
 
 var (
-	Config     ConfigData
-	configPath string
+	Config       ConfigData
+	configPath   string
+	configIsRead bool
 )
 
 func init() {
 	Config = ConfigData{}
 	configPath = GetPath()
+	configIsRead = false
 }
 
 func (c *ConfigData) Read() error {
+
+	if configIsRead {
+		return nil
+	}
 
 	// No config
 	if !util.IsFileReadable(configPath) {
@@ -45,6 +51,7 @@ func (c *ConfigData) Read() error {
 	if err != nil {
 		return err
 	}
+	configIsRead = true
 
 	err = cfg.Validate()
 	if err != nil {
@@ -95,4 +102,8 @@ func GetPath() string {
 		configPath = util.PathReplaceExt(os.Args[0], ConfigExt)
 	}
 	return configPath
+}
+
+func SetPath(p string) {
+	configPath = p
 }

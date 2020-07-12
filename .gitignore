@@ -11,3 +11,5 @@
 ## Build
 /bin/
 debug.test
+debug.test.core
+/test/command.youtube/filter
