@@ -1,0 +1,25 @@
+# https://taskfile.dev
+
+version: '2'
+
+vars:
+  GREETING: Hello, World!
+
+## Common settings
+silent: true
+
+
+tasks:
+
+  default:
+    desc: Example task
+    cmds:
+      - echo "{{.GREETING}}"
+
+  test-all:
+    desc: Tests all go modules
+    cmds:
+      - echo "----------------------------------------------"
+      - echo "Starting tests:..."
+      - echo "----------------------------------------------"
+      - go test ./dev/...
