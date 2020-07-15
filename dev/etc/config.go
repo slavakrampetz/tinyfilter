@@ -2,12 +2,15 @@ package etc
 
 import (
 	"errors"
+	"fmt"
 	tml "github.com/pelletier/go-toml"
 	"os"
 	"tinyfilter/dev/util"
 )
 
 type ConfigData struct {
+
+	// Config of TinyProxy ipc
 	TinyProxy struct {
 		Root   string
 		Filter struct {
@@ -15,6 +18,12 @@ type ConfigData struct {
 			Default    string
 			Restricted string
 		}
+	}
+
+	// Web auth
+	Auth struct {
+		Type string
+		Key  string
 	}
 }
 
@@ -59,9 +68,13 @@ func (c *ConfigData) Read() error {
 	}
 
 	c.TinyProxy.Root = cfg.TinyProxy.Root
+
 	c.TinyProxy.Filter.Filename = cfg.TinyProxy.Filter.Filename
 	c.TinyProxy.Filter.Default = cfg.TinyProxy.Filter.Default
 	c.TinyProxy.Filter.Restricted = cfg.TinyProxy.Filter.Restricted
+
+	c.Auth.Type = cfg.Auth.Type
+	c.Auth.Key = cfg.Auth.Key
 	return nil
 }
 
@@ -92,6 +105,22 @@ func (c *ConfigData) Validate() error {
 	fp = util.PathJoinSafe(c.TinyProxy.Root, c.TinyProxy.Filter.Restricted)
 	if !util.IsFile(fp) {
 		return errors.New("Restricted " + fp + " is not a readable file")
+	}
+
+	// Auth key
+	if c.Auth.Key == "" {
+		return errors.New("Auth.Key not defined in config")
+	}
+	if c.Auth.Type == "" {
+		c.Auth.Type = "query"
+	} else {
+		switch c.Auth.Type {
+		case "query":
+		case "header":
+			break
+		default:
+			return fmt.Errorf("Auth.Type value is invalid: %s", c.Auth.Type)
+		}
 	}
 
 	return nil

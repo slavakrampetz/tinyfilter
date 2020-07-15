@@ -2,19 +2,49 @@
 
 version: '2'
 
-vars:
-  GREETING: Hello, World!
-
 ## Common settings
 silent: true
+expansions: 2
+
+vars:
+  EXENAME: tinyfilter{{exeExt}}
+  EXE: ./bin/{{.EXENAME}}
+
+  GREETING: Hello, World!
+
+#  GO_PACKAGES:
+#    sh: go list ./...
+
+#  GIT_COMMIT:
+#    sh: git log -n 1 --format=%h
 
 
 tasks:
 
-  default:
-    desc: Example task
+  build:
+    desc: Build
     cmds:
-      - echo "{{.GREETING}}"
+      - cmd: echo "Building {{.EXE}} …"
+        silent: false
+      - cmd: go build -i -o ./{{.EXE}} ./dev/tinyfilter.go
+    sources:
+      - Taskfile.yml
+      - dev/**/*.go
+      - go.mod
+    generates:
+      - ./{{.EXE}}
+
+  run-web:
+    deps: [build]
+    cmds:
+      - echo "Launching {{.EXE}} ..."
+      - cmd: ./{{.EXE}} web
+        ignore_error: true
+
+#  default:
+#    desc: Example task
+#    cmds:
+#      - echo "{{.GREETING}}"
 
   test-all:
     desc: Tests all go modules
@@ -23,3 +53,35 @@ tasks:
       - echo "Starting tests:..."
       - echo "----------------------------------------------"
       - go test ./dev/...
+
+
+  vendor:
+    desc: Sync vendor/ directory according to go.mod file
+    cmds:
+      - go mod vendor
+
+  lint:
+    desc: Runs golint
+    cmds:
+      - golint {{catLines .GO_PACKAGES}}
+    silent: true
+
+  ## Dependencies
+  dl-deps:
+    desc: Downloads cli dependencies
+    cmds:
+      - task: go-get
+        vars: {REPO: golang.org/x/lint/golint}
+      #- task: go-get
+      #  vars: {REPO: github.com/goreleaser/goreleaser}
+      #- task: go-get
+      #  vars: {REPO: github.com/goreleaser/godownloader}
+
+  go-get:
+    cmds:
+      - go get -u {{.REPO}}
+
+  packages:
+    cmds:
+      - echo '{{.GO_PACKAGES}}'
+    silent: true

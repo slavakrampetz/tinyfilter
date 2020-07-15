@@ -8,7 +8,9 @@ import (
 	// Web framework
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
+	"github.com/labstack/gommon/log"
 	rand "github.com/labstack/gommon/random"
+	"net/http"
 	"os"
 )
 
@@ -25,9 +27,15 @@ func CreateEcho() *echo.Echo {
 	handler.GET("/", home)
 
 	// Ping
-	handler.GET("/ping", ping)
 	handler.GET("/ping/", ping)
-	//
+
+	// Require key for all command requests
+	g := handler.Group("/c")
+	g.Use(getAuth())
+
+	// Commands
+	g.GET("/reload/", cmdReload)
+
 	// // Set up our API
 	// // handler.Mount("/api/v1/", v1.CreateHandler())
 
@@ -39,22 +47,19 @@ func CreateEcho() *echo.Echo {
 	return handler
 }
 
-// Ping
-// noinspection GoUnusedParameter
-func ping(c echo.Context) error {
-	return c.String(200, "pong")
-}
-
-// Home, not a thing
-func home(c echo.Context) error {
-	return c.String(401, "You are not welcome here")
-}
-
 // initWeb router
 func initEcho() *echo.Echo {
 
+	log.SetLevel(log.DEBUG)
+
 	e := echo.New()
 	e.HideBanner = true
+
+	// Add Slash at end of URL/path
+	e.Pre(mw.AddTrailingSlashWithConfig(mw.TrailingSlashConfig{
+		Skipper:      nil,
+		RedirectCode: http.StatusMovedPermanently,
+	}))
 
 	// Logging
 	e.Use(mw.LoggerWithConfig(mw.LoggerConfig{

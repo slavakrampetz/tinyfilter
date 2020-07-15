@@ -32,6 +32,6 @@ func TestReadConfig(t *testing.T) {
 
 	err := Config.Read()
 	if err != nil {
-		t.Error("Error reading config", GetPath(), err)
+		t.Error("Error reading config", "\n\tConfig:", GetPath(), "\n\tError:", err)
 	}
 }

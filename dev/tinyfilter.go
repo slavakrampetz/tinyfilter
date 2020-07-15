@@ -29,7 +29,7 @@ func main() {
 
 	err = runCommand(cmd)
 	if err != nil {
-		fmt.Printf("Error executing command: %s\n", cmd.Cmd)
+		fmt.Printf("Error executing command: %s\n%v", cmd.Cmd, err)
 		os.Exit(2)
 	}
 

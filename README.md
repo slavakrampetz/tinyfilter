@@ -18,6 +18,14 @@ cd <PROJECT-ROOT>
 go build -v -o bin/tinyfilter dev/tinyfilter.go
 ```
 
+### Automate using Task (TBF)
+
+##### Task, links: 
+1. [Task](https://taskfile.dev/)
+2. [Styleguide](https://taskfile.dev/#/styleguide)
+3. [Example web app](https://github.com/go-task/examples)
+    - Direct link to [Taskfile.yml](https://github.com/go-task/examples/blob/master/go-web-app/Taskfile.yml)
+
 
 ### Testing
 
@@ -56,3 +64,10 @@ For do that, skip step 3 and use other command at step 4:
 dlv --listen=:2345 --headless=true --api-version=2 --accept-multiclient test ./dev/util/exec/
 ```
 Please note need show folder containing test code. 
+
+
+### Links
+
+1. Echo, https://echo.labstack.com/
+2. GoByExample, https://gobyexample.com/
+3. WEB, slava: http://192.168.1.21:8085/

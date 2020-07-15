@@ -15,6 +15,11 @@ import (
 
 func RunWeb() error {
 
+	err := etc.Config.Read()
+	if err != nil {
+		return err
+	}
+
 	web := &WepApp{
 		Port: etc.DefaultPort,
 	}
