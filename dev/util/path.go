@@ -86,9 +86,9 @@ func pathSafePrefix(p string) string {
 	if strings.HasPrefix(p, "//") {
 		return "/"
 	}
-	if strings.HasPrefix(p, "\\\\") {
-		return "\\"
-	}
+	// if strings.HasPrefix(p, "\\\\") {
+	// 	return "\\"
+	// }
 	return ""
 }
 
@@ -102,6 +102,6 @@ func PathJoinSafe(parts ...string) string {
 	if len(parts) > 0 {
 		prefix = pathSafePrefix(parts[0])
 	}
-	res := path.Join(parts...)
+	res := path.Clean(path.Join(parts...))
 	return prefix + res
 }

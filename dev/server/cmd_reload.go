@@ -19,5 +19,5 @@ func cmdReload(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	return c.String(http.StatusOK, "cmd.Reload")
+	return c.String(http.StatusOK, "Reload: OK")
 }
