@@ -1,0 +1,10 @@
+# https://taskfile.dev
+
+version: '2'
+
+tasks:
+
+  install:
+    desc: "Install tinyfilter"
+    cmds:
+      - echo "Can be run only on FreeBSD"

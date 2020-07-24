@@ -3,11 +3,13 @@ package etc
 import (
 	"errors"
 	"fmt"
-	"github.com/labstack/gommon/log"
+
 	tml "github.com/pelletier/go-toml"
+
 	"os"
 	"path/filepath"
 	"runtime"
+
 	"tinyfilter/dev/util"
 )
 
@@ -131,12 +133,10 @@ func (c *ConfigData) Validate() error {
 
 func GetPath() string {
 	if configPath == "" {
-		found, isExist, err := findPath()
+		found, _, err := findPath()
 		if err != nil {
 			panic(err)
 		}
-
-		log.Debug("Config file", found, "found?", isExist)
 		configPath = found
 	}
 	return configPath
@@ -144,30 +144,36 @@ func GetPath() string {
 
 func findPath() (string, bool, error) {
 
-	dir, file := filepath.Split(os.Args[0])
+	dirBinary, file := filepath.Split(os.Args[0])
+	dirBinary = filepath.Clean(dirBinary)
 	file = util.PathReplaceExt(file, ConfigExt)
-	dir = filepath.Clean(dir)
-	nearBinary := util.PathJoinSafe(dir, file)
+	nearBinary := util.PathJoinSafe(dirBinary, file)
 
 	paths := make([]string, 0, 2)
 	switch runtime.GOOS {
 	case "windows":
 		// no extra paths except one near binary
-		paths = append(paths, dir)
+		paths = append(paths, dirBinary)
 		break
 	case "freebsd":
 		home, err := os.UserHomeDir()
 		if err != nil {
 			return "", false, err
 		}
-		paths = append(paths, "/usr/local/etc/", home+"/.tinyfilter/")
+		paths = append(paths, "/usr/local/etc/")
+		if home != "" {
+			paths = append(paths, home+"/.tinyfilter/")
+		}
 		break
 	case "linux":
 		home, err := os.UserHomeDir()
 		if err != nil {
 			return "", false, err
 		}
-		paths = append(paths, "/etc/", home+"/.tinyfilter/")
+		paths = append(paths, "/etc/")
+		if home != "" {
+			paths = append(paths, home+"/.tinyfilter/")
+		}
 		break
 	default:
 		return "", false, errors.New("OS " + runtime.GOOS + " not supported yet")

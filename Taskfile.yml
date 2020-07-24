@@ -10,8 +10,6 @@ vars:
   EXENAME: tinyfilter{{exeExt}}
   EXE: ./bin/{{.EXENAME}}
 
-  GREETING: Hello, World!
-
 #  GO_PACKAGES:
 #    sh: go list ./...
 

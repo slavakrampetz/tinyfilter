@@ -1,0 +1,18 @@
+# https://taskfile.dev
+
+version: '2'
+
+tasks:
+
+  install:
+    desc: "Install tinyfilter"
+    deps: [build]
+    cmds:
+      - echo "Copy binary ..."
+      - cp ./{{.EXE}} /root/.tinyfilter/{{.EXENAME}}
+      - echo "Copy service file ..."
+      - cp dev/service.freebsd.sh /usr/local/etc/rc.d/tinyfilter
+      - chmod 555 /usr/local/etc/rc.d/tinyfilter
+      - echo "Test run ..."
+      - cmd: /root/.tinyfilter/{{.EXENAME}}
+        ignore_error: true

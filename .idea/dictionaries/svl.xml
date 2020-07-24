@@ -8,6 +8,9 @@
       <w>goreleaser</w>
       <w>netbsd</w>
       <w>openbsd</w>
+      <w>pidfile</w>
+      <w>postcmd</w>
+      <w>rcvar</w>
       <w>tinyfilter</w>
       <w>tinyproxy</w>
       <w>unindexed</w>
