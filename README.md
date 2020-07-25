@@ -63,7 +63,7 @@ For do that, skip step 3 and use other command at step 4:
 ```bash
 dlv --listen=:2345 --headless=true --api-version=2 --accept-multiclient test ./dev/util/exec/
 ```
-Please note need show folder containing test code. 
+Please note need set folder containing test code. 
 
 
 ### Links
@@ -71,3 +71,19 @@ Please note need show folder containing test code.
 1. Echo, https://echo.labstack.com/
 2. GoByExample, https://gobyexample.com/
 3. WEB, slava: http://192.168.1.21:8085/
+
+### Commands
+1. Ping: test service online
+2. Reload tinyproxy: restart service
+3. Turn Youtube on/off: 
+   - change config of tinyproxy
+   - restart tinyproxy service
+4. TODO: Get a current status of tinyproxy
+
+
+### Commands, how to run
+* http://192.168.1.3:8085/c/reload/?key=limp0p0 -- reload
+* http://192.168.1.3:8085/c//?key=limp0p0 -- reload
+* http://192.168.1.3:8085/c/youtube/on/?key=limp0p0 -- youtube on
+* http://192.168.1.3:8085/c/youtube/off/?key=limp0p0 -- youtube off
+

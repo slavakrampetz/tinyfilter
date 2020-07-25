@@ -35,6 +35,7 @@ func CreateEcho() *echo.Echo {
 
 	// Commands
 	g.GET("/reload/", cmdReload)
+	g.GET("/youtube/:state/", cmdYoutube)
 
 	// // Set up our API
 	// // handler.Mount("/api/v1/", v1.CreateHandler())
