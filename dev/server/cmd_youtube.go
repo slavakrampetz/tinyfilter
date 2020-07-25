@@ -16,6 +16,8 @@ func cmdYoutube(c echo.Context) error {
 
 	isOn := true
 	switch state {
+	case "get":
+		return cmdYoutubeRead(c)
 	case "off", "no":
 		isOn = false
 	case "on", "yes":
@@ -33,4 +35,13 @@ func cmdYoutube(c echo.Context) error {
 	log.Inf("success: Youtube status set to", isOn)
 
 	return c.String(http.StatusOK, "Youtube: OK")
+}
+
+func cmdYoutubeRead(c echo.Context) error {
+	status, err := youtube.ExecRead()
+	if err != nil {
+		log.Err(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	return c.JSON(http.StatusOK, uint8(status))
 }

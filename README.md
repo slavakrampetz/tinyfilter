@@ -86,4 +86,5 @@ Please note need set folder containing test code.
 * http://192.168.1.3:8085/c//?key=limp0p0 -- reload
 * http://192.168.1.3:8085/c/youtube/on/?key=limp0p0 -- youtube on
 * http://192.168.1.3:8085/c/youtube/off/?key=limp0p0 -- youtube off
+* http://192.168.1.3:8085/c/youtube/get/?key=limp0p0 -- youtube off
 

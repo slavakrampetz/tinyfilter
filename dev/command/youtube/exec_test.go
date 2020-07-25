@@ -25,8 +25,21 @@ func TestExec(t *testing.T) {
 	configPath := util.PathJoinSafe(dir, "../../../test/command.youtube/test.config")
 	etc.SetPath(configPath)
 
+
+	// test readlink
+	save := etc.Config.TinyProxy.Filter.Filename
+	etc.Config.TinyProxy.Filter.Filename = "non-existing-file"
+	status, err := readLink()
+	if err == nil {
+		t.Errorf("Expect error on read non-existing file, got mil")
+	}
+	if status != StatusUnknown {
+		t.Errorf("Expect %v on read non-existing file, got %v", StatusUnknown, status)
+		return
+	}
+	etc.Config.TinyProxy.Filter.Filename = save
+
 	// Exec
-	var err error
 	var text string
 
 	err = Exec(true)
@@ -34,7 +47,7 @@ func TestExec(t *testing.T) {
 		t.Errorf("Failed: %s", err)
 		return
 	}
-	err, text = readLink()
+	err, text = readTestDataByLink()
 	if err != nil {
 		t.Errorf("Cannot read link: %s", err)
 	}
@@ -43,23 +56,42 @@ func TestExec(t *testing.T) {
 		return
 	}
 
+	status, err = ExecRead()
+	if err != nil {
+		t.Errorf("Failed: %s", err)
+		return
+	}
+	if status != StatusOff {
+		t.Errorf("Expect %v, got %v", StatusOff, status)
+		return
+	}
+
 	err = Exec(false)
 	if err != nil {
 		t.Errorf("Failed: %s", err)
 		return
 	}
-	err, text = readLink()
+	err, text = readTestDataByLink()
 	if err != nil {
 		t.Errorf("Cannot read link: %s", err)
 	}
 	if text != "default" {
-		t.Errorf("Expect 'restricted', got '%s'", text)
+		t.Errorf("Expect 'default', got '%s'", text)
 		return
 	}
 
+	status, err = ExecRead()
+	if err != nil {
+		t.Errorf("Failed: %s", err)
+		return
+	}
+	if status != StatusOn {
+		t.Errorf("Expect %v, got %v", StatusOn, status)
+		return
+	}
 }
 
-func readLink() (error, string) {
+func readTestDataByLink() (error, string) {
 	name := etc.Config.TinyProxy.Filter.Filename
 	p := util.PathJoinSafe(etc.Config.TinyProxy.Root, name)
 
