@@ -20,6 +20,7 @@ load_rc_config $name
 : ${tinyfilter_pidfile="/var/run/${name}.pid"}
 
 pidfile="${tinyfilter_pidfile}"
+tinyfilter_log="/root/.tinyproxy/tinyfilter.log"
 
 ## Run
 
@@ -27,7 +28,7 @@ pidfile="${tinyfilter_pidfile}"
 ## https://www.freebsd.org/cgi/man.cgi?query=daemon&sektion=8
 
 command="/usr/sbin/daemon"
-daemon_args="-P ${pidfile} -R2 -t \"${name} daemon\""
-command_args="${daemon_args} /go/src/tinyfilter/bin/tinyfilter web"
+daemon_args="-P ${pidfile} -R2 -t \"${name} daemon\" -o ${tinyfilter_log} -m 3"
+command_args="${daemon_args} /go/bin/tinyfilter web"
 
 run_rc_command "${1}"

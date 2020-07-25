@@ -4,15 +4,24 @@ version: '2'
 
 tasks:
 
+  p1:
+    desc: "Test env"
+    cmds:
+      - echo "{{.GOPATH}}/bin"
+
   install:
     desc: "Install tinyfilter"
     deps: [build]
     cmds:
-      - echo "Copy binary ..."
-      - cp ./{{.EXE}} /root/.tinyfilter/{{.EXENAME}}
+      - echo "Install to {{.GOPATH}}/bin/ ..."
+      - go install ./dev/tinyfilter.go
+      - echo "Test run ..."
+      - cmd: "{{.GOPATH}}/bin/{{.EXENAME}} h"
+        ignore_error: true
       - echo "Copy service file ..."
       - cp dev/service.freebsd.sh /usr/local/etc/rc.d/tinyfilter
       - chmod 555 /usr/local/etc/rc.d/tinyfilter
-      - echo "Test run ..."
-      - cmd: /root/.tinyfilter/{{.EXENAME}}
+      - echo "Test run service ..."
+      - cmd: service tinyfilter onestatus
         ignore_error: true
+

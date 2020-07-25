@@ -18,8 +18,6 @@ func main() {
 
 	banner()
 
-	log.Inf("Hello world")
-
 	cmd, err := args.Parse(os.Args[1:])
 	if err != nil {
 		log.Err("Error parsing arguments>", err)
