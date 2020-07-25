@@ -13,8 +13,8 @@ type Status uint8
 
 const (
 	StatusUnknown = Status(0)
-	StatusOn = Status(1)
-	StatusOff = Status(2)
+	StatusOn      = Status(1)
+	StatusOff     = Status(2)
 )
 
 func (s Status) String() string {
@@ -78,15 +78,14 @@ func readLink() (Status, error) {
 	return StatusOn, nil
 }
 
-
 // Link restricted/default filter settings
 // to file included into TinyProxy config
 func reLink(isOn bool) error {
 	source := ""
 	if isOn {
-		source = etc.Config.TinyProxy.Filter.Restricted
-	} else {
 		source = etc.Config.TinyProxy.Filter.Default
+	} else {
+		source = etc.Config.TinyProxy.Filter.Restricted
 	}
 	link := util.PathJoinSafe(
 		etc.Config.TinyProxy.Root,
