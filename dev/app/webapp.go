@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"syscall"
 	"tinyfilter/dev/etc"
+	"tinyfilter/dev/log"
 	"tinyfilter/dev/server"
 )
 
@@ -26,7 +27,7 @@ func RunWeb() error {
 
 	quit, err := web.Start()
 	if err != nil {
-		fmt.Println("Error starting web-server> ", err)
+		log.Err("cannot start web-server", err)
 		return err
 	}
 
@@ -89,7 +90,7 @@ func (web *WepApp) Start() (chan bool, error) {
 		for sig := range signals {
 			switch sig {
 			case syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL:
-				fmt.Println(sig, " signal received, exiting...")
+				log.Inf(sig, " signal received, exiting")
 				done <- true
 				return
 			case syscall.SIGHUP:

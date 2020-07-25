@@ -4,8 +4,13 @@
       <w>ckey</w>
       <w>cmds</w>
       <w>configtest</w>
+      <w>dbgf</w>
+      <w>dwie</w>
+      <w>dwif</w>
+      <w>getenv</w>
       <w>godownloader</w>
       <w>goreleaser</w>
+      <w>inff</w>
       <w>netbsd</w>
       <w>openbsd</w>
       <w>pidfile</w>

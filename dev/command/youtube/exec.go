@@ -1,17 +1,17 @@
 package youtube
 
 import (
-	"fmt"
 	"os"
 	"tinyfilter/dev/command/reload"
 	"tinyfilter/dev/etc"
+	"tinyfilter/dev/log"
 	"tinyfilter/dev/util"
 )
 
 // Reload TinyProxy configuration
 func Exec(isOn bool) error {
 
-	fmt.Println("Turning Youtube access", isOn)
+	log.Inf("Turning Youtube access", isOn)
 
 	err := etc.Config.Read()
 	if err != nil {

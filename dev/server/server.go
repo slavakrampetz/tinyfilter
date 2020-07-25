@@ -68,7 +68,7 @@ func initEcho() *echo.Echo {
 		Output:           os.Stdout,
 	}))
 
-	// Request ID
+	// Request InfDump
 	e.Use(mw.RequestIDWithConfig(mw.RequestIDConfig{
 		Skipper:   nil,
 		Generator: requestId,

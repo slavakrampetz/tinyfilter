@@ -23,6 +23,9 @@ pidfile="${tinyfilter_pidfile}"
 
 ## Run
 
+## See daemon man for details
+## https://www.freebsd.org/cgi/man.cgi?query=daemon&sektion=8
+
 command="/usr/sbin/daemon"
 daemon_args="-P ${pidfile} -R2 -t \"${name} daemon\""
 command_args="${daemon_args} /go/src/tinyfilter/bin/tinyfilter web"
