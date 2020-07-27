@@ -29,7 +29,7 @@ func TestExec(t *testing.T) {
 	// test readlink
 	save := etc.Config.TinyProxy.Filter.Filename
 	etc.Config.TinyProxy.Filter.Filename = "non-existing-file"
-	status, err := readLink()
+	status, err := linkRead()
 	if err == nil {
 		t.Errorf("Expect error on read non-existing file, got mil")
 	}

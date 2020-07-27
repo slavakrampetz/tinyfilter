@@ -7,7 +7,8 @@ import (
 	"tinyfilter/dev/util"
 )
 
-func readLink() (Status, error) {
+// Reads current link status and return it
+func linkRead() (Status, error) {
 	linkPath := util.PathJoinSafe(
 		etc.Config.TinyProxy.Root,
 		etc.Config.TinyProxy.Filter.Filename)
@@ -28,7 +29,7 @@ func readLink() (Status, error) {
 
 // Link restricted/default filter settings
 // to file included into TinyProxy config
-func reLink(isOn bool) error {
+func linkRecreate(isOn bool) error {
 	source := ""
 	if isOn {
 		source = etc.Config.TinyProxy.Filter.Default

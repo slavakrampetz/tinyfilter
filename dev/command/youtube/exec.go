@@ -7,20 +7,27 @@ import (
 )
 
 // Reload TinyProxy configuration
-func Exec(isOn bool) error {
+func Exec(isOn bool, minutes int) error {
 
-	log.Inf("Turning Youtube access", isOn)
+	log.Inf("Turning Youtube access", isOn, "for", minutes, "min")
 	if err := etc.Config.Read(); err != nil {
 		return err
 	}
 
-	if err := reLink(isOn); err != nil {
+	if err := linkRecreate(isOn); err != nil {
 		return err
 	}
 
 	// Reload TinyProxy
 	if err := reload.Exec(); err != nil {
 		return err
+	}
+
+	// Update scheduler
+	if isOn {
+		autostopSet(minutes)
+	} else {
+		autostopCancel()
 	}
 
 	return nil
@@ -34,5 +41,5 @@ func ExecRead() (Status, error) {
 		return StatusUnknown, err
 	}
 
-	return readLink()
+	return linkRead()
 }
