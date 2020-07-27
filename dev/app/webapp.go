@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"errors"
-	"fmt"
 	e "github.com/labstack/echo"
 	"os"
 	"os/signal"
@@ -59,7 +58,7 @@ func (web *WepApp) getAddress() string {
 }
 
 func (web *WepApp) ReloadConfig() {
-	fmt.Println("TODO: reload config...")
+	log.Inf("TODO: reload config...")
 }
 
 // Launch and listen to OS signals
