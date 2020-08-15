@@ -74,17 +74,17 @@ Please note need set folder containing test code.
 
 ### Commands
 1. Ping: test service online
+    * http://HOST:PORT/c/ping/
 2. Reload tinyproxy: restart service
-3. Turn Youtube on/off: 
+    * http://HOST:PORT/c/reload/?key=KEY
+3. Get a current status of tinyproxy
+    * http://HOST:PORT/c/youtube/get/?key=KEY
+4. Turn Youtube on/off: 
    - change config of tinyproxy
    - restart tinyproxy service
-4. TODO: Get a current status of tinyproxy
-
-
+   - commands
+     http://HO.ST:PORT/c/youtube/on/?key=KEY -- youtube on
+     http://HO.ST:PORT/c/youtube/off/?key=KEY -- youtube off
 ### Commands, how to run
-* http://192.168.1.3:8085/c/reload/?key=limp0p0 -- reload
-* http://192.168.1.3:8085/c//?key=limp0p0 -- reload
-* http://192.168.1.3:8085/c/youtube/on/?key=limp0p0 -- youtube on
-* http://192.168.1.3:8085/c/youtube/off/?key=limp0p0 -- youtube off
-* http://192.168.1.3:8085/c/youtube/get/?key=limp0p0 -- youtube off
+
 
